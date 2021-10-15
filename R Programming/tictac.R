@@ -173,7 +173,7 @@ check_winner <- function(tic_tac, player){
 }
 
 # function to take user input for row and column
-get_input <- function(){
+input_val <- function(){
   if (interactive()) {
     con <- stdin()
   } else {
@@ -196,15 +196,43 @@ get_input <- function(){
   return (c(row, col))
 }
 
-
-# main function to run the game
-run <- function(){
-  
+get_input <- function(){
   if (interactive()) {
     con <- stdin()
   } else {
     con <- "stdin"
   }
+  
+  entry <- input_val()
+  row = entry[1]
+  column = entry[2]
+  
+  cat('Is your input final (y/n): ')
+  check <- readLines(con = con, n = 1)
+  while (check != 'y'){
+    if (check!= 'y' & check != 'n'){
+      cat('invalid entry. Try again !!\n')
+      cat('Is your input final (y/n): ')
+      check <- readLines(con = con, n = 1)
+    }else{
+      entry <- input_val()
+      row = entry[1]
+      column = entry[2]
+      cat('Is your input final (y/n): ')
+      check <- readLines(con = con, n = 1)
+    }
+  }
+  return(c(row, column))
+}
+
+# main function to run the game
+run <- function(){
+  
+  #if (interactive()) {
+  #  con <- stdin()
+  #} else {
+  #  con <- "stdin"
+  #}
   # assigning the user and computer letter symbols
   p_choice <- user_choice() 
   if (p_choice=='x'){
@@ -247,26 +275,18 @@ run <- function(){
       cat(paste('\n########################  Round', round,'################\n'))  
     }
     
-    
     cat('\n\n****** Your turn *******\n\n')
     entry <- get_input()
     row = entry[1]
     column = entry[2]
     
-    cat('Is your input final (y/n): ')
-    check <- readLines(con = con, n = 1)
-    while (check != 'y'){
-      if (check!= 'y' & check != 'n'){
-        cat('invalid entry. Try again !!\n')
-        cat('Is your input final (y/n): ')
-        check <- readLines(con = con, n = 1)
-      }else{
-        entry <- get_input()
-        row = entry[1]
-        column = entry[2]
-        cat('Is your input final (y/n): ')
-        check <- readLines(con = con, n = 1)
-      }
+    while (is.na(tic_tac[row,column])==FALSE){
+      cat('\n!!!Move already placed in that position. Please choose again..!!!\n\n')
+      print(tic_tac)
+      cat('\n')
+      entry <- get_input()
+      row = entry[1]
+      column = entry[2]
     }
     
     cat('\nMove placed\n\n')
@@ -276,7 +296,7 @@ run <- function(){
     
     winner <- check_winner(tic_tac, p_choice)
     if (winner == TRUE){
-      cat(paste('\n\n****** Player: ', p_choice, ' is winner.*******\n'))
+      cat(paste('\n\n****** Player: ', p_choice, ' is winner.*******\n\n'))
       break
     }
     check_status(tic_tac)
