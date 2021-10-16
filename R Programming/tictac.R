@@ -34,49 +34,39 @@ computer_move <- function(tic_tac, p_choice, c_choice){
   
   tictac_logic <- tic_tac== c_choice
   df <- replace(tictac_logic, is.na(tictac_logic), FALSE)
-  #values_ <- c(df$`1`,df$`2`, df$`3`)
   diag1_ <- c(df[1], df[5], df[9])
   diag2_ <- c(df[3], df[5], df[7])
   
-  if ((sum(df[1,])==2) & (length(which(is.na(tic_tac[1,])))==1)){
-    tic_tac[1, which(is.na(tic_tac[1,]))]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[2,])==2) & (length(which(is.na(tic_tac[2,])))==1)){
-    tic_tac[2, which(is.na(tic_tac[2,]))]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[3,])==2) &(length(which(is.na(tic_tac[3,])))==1)){
-    tic_tac[3, which(is.na(tic_tac[3,]))]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[,1])==2) & (length(which(is.na(tic_tac[,1])))==1)){
-    tic_tac[which(is.na(tic_tac[,1])),1]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[,2])==2) & (length(which(is.na(tic_tac[,2])))==1)){
-    tic_tac[which(is.na(tic_tac[,2])),2]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[,3])==2) & (length(which(is.na(tic_tac[,3])))==1)){
-    tic_tac[which(is.na(tic_tac[,3])),3]<- c_choice
-    return(tic_tac)
-  }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
-    val <- which(is.na(diag1))
-    tic_tac[val, val]<- c_choice
-    return(tic_tac)
-  }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
-    val <- which(is.na(diag2))
-    if (val == 1){
-      tic_tac[3,1]<- c_choice
+  for (val in 1:3){
+    if ((sum(df[val,])==2) & (length(which(is.na(tic_tac[val,])))==1)){
+      tic_tac[val, which(is.na(tic_tac[val,]))]<- c_choice
       return(tic_tac)
-    }else if(val==2){
-      tic_tac[2,2]<- c_choice
+    }else if((sum(df[,val])==2) & (length(which(is.na(tic_tac[,val])))==1)){
+      tic_tac[which(is.na(tic_tac[,val])),val]<- c_choice
       return(tic_tac)
+    }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
+      val <- which(is.na(diag1))
+      tic_tac[val, val]<- c_choice
+      return(tic_tac)
+    }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
+      val <- which(is.na(diag1))
+      tic_tac[val, val]<- c_choice
+      return(tic_tac)
+    }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
+      val <- which(is.na(diag2))
+      if (val == 1){
+        tic_tac[3,1]<- c_choice
+        return(tic_tac)
+      }else if(val==2){
+        tic_tac[2,2]<- c_choice
+        return(tic_tac)
+      }else{
+        tic_tac[1,3]<- c_choice
+        return(tic_tac)
+      }
     }else{
-      tic_tac[1,3]<- c_choice
-      return(tic_tac)
+      return(computer_defense_move(tic_tac, p_choice, c_choice))
     }
-  }else{
-    #val <- which(is.na(values))
-    #values[sample(val, 1)] <- c_choice
-    #return(matrix(values, nrow=3, ncol = 3))
-    return(computer_defense_move(tic_tac, p_choice, c_choice))
   }
 }
 
@@ -89,49 +79,37 @@ computer_defense_move <- function(tic_tac, p_choice, c_choice){
   
   tictac_logic <- tic_tac== p_choice
   df <- replace(tictac_logic, is.na(tictac_logic), FALSE)
-  #values_ <- c(df$`1`,df$`2`, df$`3`)
   diag1_ <- c(df[1], df[5], df[9])
   diag2_ <- c(df[3], df[5], df[7])
   
-  if ((sum(df[1,])==2) & (length(which(is.na(tic_tac[1,])))==1)){
-    tic_tac[1, which(is.na(tic_tac[1,]))]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[2,])==2) & (length(which(is.na(tic_tac[2,])))==1)){
-    tic_tac[2, which(is.na(tic_tac[2,]))]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[3,])==2) &(length(which(is.na(tic_tac[3,])))==1)){
-    tic_tac[3, which(is.na(tic_tac[3,]))]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[,1])==2) & (length(which(is.na(tic_tac[,1])))==1)){
-    tic_tac[which(is.na(tic_tac[,1])),1]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[,2])==2) & (length(which(is.na(tic_tac[,2])))==1)){
-    tic_tac[which(is.na(tic_tac[,2])),2]<- c_choice
-    return(tic_tac)
-  }else if((sum(df[,3])==2) & (length(which(is.na(tic_tac[,3])))==1)){
-    tic_tac[which(is.na(tic_tac[,3])),3]<- c_choice
-    return(tic_tac)
-  }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
-    val <- which(is.na(diag1))
-    tic_tac[val, val]<- c_choice
-    return(tic_tac)
-  }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
-    val <- which(is.na(diag2))
-    if (val == 1){
-      tic_tac[3,1]<- c_choice
+  for (val in 1:3){
+    if ((sum(df[val,])==2) & (length(which(is.na(tic_tac[val,])))==1)){
+      tic_tac[val, which(is.na(tic_tac[val,]))]<- c_choice
       return(tic_tac)
-    }else if(val==2){
-      tic_tac[2,2]<- c_choice
+    }else if((sum(df[,val])==2) & (length(which(is.na(tic_tac[,val])))==1)){
+      tic_tac[which(is.na(tic_tac[,val])),val]<- c_choice
       return(tic_tac)
+    }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
+      val <- which(is.na(diag1))
+      tic_tac[val, val]<- c_choice
+      return(tic_tac)
+    }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
+      val <- which(is.na(diag2))
+      if (val == 1){
+        tic_tac[3,1]<- c_choice
+        return(tic_tac)
+      }else if(val==2){
+        tic_tac[2,2]<- c_choice
+        return(tic_tac)
+      }else{
+        tic_tac[1,3]<- c_choice
+        return(tic_tac)
+      }
     }else{
-      tic_tac[1,3]<- c_choice
-      return(tic_tac)
-     }
-  }else{
-    val <- which(is.na(values))
-    values[sample(val, 1)] <- c_choice
-    return(matrix(values, nrow=3, ncol = 3))
-    #return(computer_offense_move(tic_tac, c_choice))
+      val <- which(is.na(values))
+      values[sample(val, 1)] <- c_choice
+      return(matrix(values, nrow=3, ncol = 3))
+    }
   }
 }
 
@@ -151,24 +129,16 @@ check_winner <- function(tic_tac, player){
   #values <- c(tic_tac$`1`,tic_tac$`2`, tic_tac$`3`)
   diag1 <- c(df[1], df[5], df[9])
   diag2 <- c(df[3], df[5], df[7])
-  if (sum(df[1,])==3){
-    return(TRUE)
-  }else if(sum(df[2,])==3){
-    return(TRUE)
-  }else if(sum(df[3,])==3){
-    return(TRUE)
-  }else if(sum(df[,1])==3){
-    return(TRUE)
-  }else if(sum(df[,2])==3){
-    return(TRUE)
-  }else if(sum(df[,3])==3){
-    return(TRUE)
-  }else if(sum(diag1)==3){
-    return(TRUE)
-  }else if(sum(diag2)==3){
-    return(TRUE)
-  }else{
-    return(FALSE)
+  for (val in 1:3){
+    if (sum(df[val,])==3){
+      return(TRUE)
+    }else if(sum(diag1)==3){
+      return(TRUE)
+    }else if(sum(diag2)==3){
+      return(TRUE)
+    }else{
+      return(FALSE)
+    }
   }
 }
 
@@ -182,14 +152,14 @@ input_val <- function(){
   
   row <- 0
   col <- 0
-  while (row>3|col>3|row<1|col<1){
+  while ((row %in% c(1,2,3) & col %in% c(1,2,3))==FALSE){
     cat('What row ?: ')
     row <- as.numeric(readLines(con = con, n = 1))
     #row <-as.numeric(readline(prompt='What row ? '))
     cat('What column ?: ')
     #col <- as.numeric(readline(prompt='What col ? '))
     col <- as.numeric(readLines(con = con, n = 1))
-    if (row>3| row <1 | col>3|col<1){
+    if ((row %in% c(1,2,3) & col %in% c(1,2,3))==FALSE){
       cat('\n!!! Invalid Selection !!! Choose again.. \n\n')
     }
   }
