@@ -25,91 +25,97 @@ fill_df <- function(row, column, df, player){
  return(df)
 }
 
-
-#function to place offensive computer moves
-computer_move <- function(tic_tac, p_choice, c_choice){
-  values <- c(tic_tac[,1],tic_tac[,2], tic_tac[,3])
-  diag1 <- c(values[1], values[5], values[9])
-  diag2 <- c(values[3], values[5], values[7])
-  
-  tictac_logic <- tic_tac== c_choice
-  df <- replace(tictac_logic, is.na(tictac_logic), FALSE)
-  diag1_ <- c(df[1], df[5], df[9])
-  diag2_ <- c(df[3], df[5], df[7])
-  
-  for (val in 1:3){
-    if ((sum(df[val,])==2) & (length(which(is.na(tic_tac[val,])))==1)){
-      tic_tac[val, which(is.na(tic_tac[val,]))]<- c_choice
-      return(tic_tac)
-    }else if((sum(df[,val])==2) & (length(which(is.na(tic_tac[,val])))==1)){
-      tic_tac[which(is.na(tic_tac[,val])),val]<- c_choice
-      return(tic_tac)
-    }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
-      val <- which(is.na(diag1))
-      tic_tac[val, val]<- c_choice
-      return(tic_tac)
-    }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
-      val <- which(is.na(diag1))
-      tic_tac[val, val]<- c_choice
-      return(tic_tac)
-    }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
-      val <- which(is.na(diag2))
-      if (val == 1){
-        tic_tac[3,1]<- c_choice
-        return(tic_tac)
-      }else if(val==2){
-        tic_tac[2,2]<- c_choice
-        return(tic_tac)
-      }else{
-        tic_tac[1,3]<- c_choice
-        return(tic_tac)
-      }
-    }else{
-      return(computer_defense_move(tic_tac, p_choice, c_choice))
-    }
+get_sum <- function(x, player){
+  if (any(is.na(x))){
+    x<- x==player
+    return(sum(x, na.rm = TRUE))
+  }else{
+    return(0)
   }
 }
 
+# function to get the fill position for computer
+fill_position <- function(tic_tac, player){
+  #tic_tac <- replace(tic_tac, is.na(tic_tac), FALSE)
+  #r <- rowSums(tic_tac==player)
+  #c <- colSums(tic_tac==player)
+  r <- apply(tic_tac,1,get_sum,player)
+  c <- apply(tic_tac,2,get_sum,player)
+  
+  if (2 %in% r){
+    row_index <- which(r==2)
+    val <- which(is.na(tic_tac[row_index,]))
+    return (c(row_index, val))
+  }else if (2 %in% c){
+    col_index <- which(c==2)
+    val <- which(is.na(tic_tac[,col_index]))
+    return (c(val,col_index)) 
+  }else{
+    return (0)
+  }
+}
+
+#function to place offensive computer moves
+computer_move <- function(tic_tac, p_choice, c_choice){
+  diag1 <-diag(tic_tac)
+  diag2 <- diag(t(apply(tic_tac,2, rev)))
+  
+  tictac_logic <- tic_tac== c_choice
+  df <- replace(tictac_logic, is.na(tictac_logic), FALSE)
+  
+  diag1_ <- diag(df)
+  diag2_ <- diag(t(apply(df,2, rev)))
+  
+  pos <- fill_position(tic_tac, c_choice)
+  
+  if (length(pos)==2){
+    tic_tac[pos[1],pos[2]] <- c_choice
+    return(tic_tac)
+  }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
+    val <- which(is.na(diag1))
+    tic_tac[val, val]<- c_choice
+    return(tic_tac)
+  }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
+    val <- which(is.na(diag2))
+    tic_tac_t <- t(apply(tic_tac, 2, rev))
+    tic_tac_t[val, val]<- c_choice
+    return(apply(t(tic_tac_t), 2,rev))
+  }else{
+    return(computer_defense_move(tic_tac, p_choice, c_choice))
+  }
+}
 
 #function to place defensive computer moves
 computer_defense_move <- function(tic_tac, p_choice, c_choice){
   values <- c(tic_tac[,1],tic_tac[,2], tic_tac[,3])
-  diag1 <- c(values[1], values[5], values[9])
-  diag2 <- c(values[3], values[5], values[7])
+  diag1 <-diag(tic_tac)
+  diag2 <- diag(t(apply(tic_tac,2, rev)))
   
   tictac_logic <- tic_tac== p_choice
   df <- replace(tictac_logic, is.na(tictac_logic), FALSE)
-  diag1_ <- c(df[1], df[5], df[9])
-  diag2_ <- c(df[3], df[5], df[7])
   
-  for (val in 1:3){
-    if ((sum(df[val,])==2) & (length(which(is.na(tic_tac[val,])))==1)){
-      tic_tac[val, which(is.na(tic_tac[val,]))]<- c_choice
-      return(tic_tac)
-    }else if((sum(df[,val])==2) & (length(which(is.na(tic_tac[,val])))==1)){
-      tic_tac[which(is.na(tic_tac[,val])),val]<- c_choice
-      return(tic_tac)
-    }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
-      val <- which(is.na(diag1))
-      tic_tac[val, val]<- c_choice
-      return(tic_tac)
-    }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
-      val <- which(is.na(diag2))
-      if (val == 1){
-        tic_tac[3,1]<- c_choice
-        return(tic_tac)
-      }else if(val==2){
-        tic_tac[2,2]<- c_choice
-        return(tic_tac)
-      }else{
-        tic_tac[1,3]<- c_choice
-        return(tic_tac)
-      }
-    }else{
-      val <- which(is.na(values))
-      values[sample(val, 1)] <- c_choice
-      return(matrix(values, nrow=3, ncol = 3))
-    }
+  diag1_ <- diag(df)
+  diag2_ <- diag(t(apply(df,2, rev)))
+  
+  pos <- fill_position(tic_tac, p_choice)
+  
+  
+  if (length(pos)==2){
+    tic_tac[pos[1],pos[2]] <- c_choice
+    return(tic_tac)
+  }else if((sum(diag1_)==2) & (length(which(is.na(diag1)))==1)){
+    val <- which(is.na(diag1))
+    tic_tac[val, val]<- c_choice
+    return(tic_tac)
+  }else if((sum(diag2_)==2) & (length(which(is.na(diag2)))==1)){
+    val <- which(is.na(diag2))
+    tic_tac_t <- t(apply(tic_tac, 2, rev))
+    tic_tac_t[val, val]<- c_choice
+    return(apply(t(tic_tac_t), 2,rev))
+  }else{
+    val <- which(is.na(values))
+    values[sample(val, 1)] <- c_choice
+    return(matrix(values, nrow=3, ncol = 3))
   }
 }
 
@@ -126,19 +132,13 @@ check_status <- function(df){
 check_winner <- function(tic_tac, player){
   tictac_logic <- tic_tac== player
   df <- replace(tictac_logic, is.na(tictac_logic), FALSE)
-  #values <- c(tic_tac$`1`,tic_tac$`2`, tic_tac$`3`)
-  diag1 <- c(df[1], df[5], df[9])
-  diag2 <- c(df[3], df[5], df[7])
-  for (val in 1:3){
-    if (sum(df[val,])==3){
-      return(TRUE)
-    }else if(sum(diag1)==3){
-      return(TRUE)
-    }else if(sum(diag2)==3){
-      return(TRUE)
-    }else{
-      return(FALSE)
-    }
+  diag1 <- diag(df)
+  diag2 <- diag(t(apply(df,2, rev)))
+  
+  if (3 %in% colSums(df)| 3 %in% rowSums(df) |sum(diag1)==3 |sum(diag2)==3){
+    return(TRUE)
+  }else{
+    return(FALSE)
   }
 }
 
@@ -155,10 +155,10 @@ input_val <- function(){
   while ((row %in% c(1,2,3) & col %in% c(1,2,3))==FALSE){
     cat('What row ?: ')
     row <- as.numeric(readLines(con = con, n = 1))
-    #row <-as.numeric(readline(prompt='What row ? '))
+    
     cat('What column ?: ')
-    #col <- as.numeric(readline(prompt='What col ? '))
     col <- as.numeric(readLines(con = con, n = 1))
+    
     if ((row %in% c(1,2,3) & col %in% c(1,2,3))==FALSE){
       cat('\n!!! Invalid Selection !!! Choose again.. \n\n')
     }
@@ -197,12 +197,6 @@ get_input <- function(){
 
 # main function to run the game
 run <- function(){
-  
-  #if (interactive()) {
-  #  con <- stdin()
-  #} else {
-  #  con <- "stdin"
-  #}
   # assigning the user and computer letter symbols
   p_choice <- user_choice() 
   if (p_choice=='x'){
@@ -291,6 +285,8 @@ run <- function(){
     check_status(tic_tac)
   }
 }
+
 run()
+
 
 
