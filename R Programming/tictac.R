@@ -261,7 +261,7 @@ run <- function() {
     winner <- check_winner(tic_tac, p_choice)
     if (winner == TRUE) {
       cat(paste("\n\n****** Player: ", p_choice, " is winner.*******\n\n"))
-      break
+      quit(save = "yes", status = 0)
     }
     check_status(tic_tac)
     count <- count + 1
@@ -279,7 +279,7 @@ run <- function() {
     winner <- check_winner(tic_tac, c_choice)
     if (winner == TRUE) {
       cat(paste("\n***** Player: ", c_choice,  "is winner.*****\n\n"))
-      break
+      quit(save = "yes", status = 0)
     }
     check_status(tic_tac)
   }
