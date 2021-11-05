@@ -10,11 +10,11 @@ user_choice <- function() {
   cat("x or o ?: ")
   p_choice <- readLines(con = con, n = 1)
   while ((p_choice != "x") & (p_choice != "o")) {
-    cat(paste("You have chosen: ', p_choice,'.!! Wrong Choice. Please, choose again.\n"))
+    cat(paste("You have chosen: ", p_choice, ".!! Wrong Choice. Please, choose again.\n"))
     cat("x or o ?: ")
     p_choice <- readLines(con = con, n = 1)
   }
-  cat(paste("You have chosen: ', p_choice, '\n"))
+  cat(paste("You have chosen: ", p_choice, "\n"))
   return(p_choice)
 }
 
@@ -267,7 +267,7 @@ run <- function() {
     count <- count + 1
     if (count %in% count_val) {
       round <- round + 1
-      cat(paste("\n########################  Round', round,'################\n"))
+      cat(paste("\n########################  Round", round, "################\n"))
     }
     tic_tac <- computer_move(tic_tac, p_choice, c_choice)
     cat("\nComputer move registered\n")
